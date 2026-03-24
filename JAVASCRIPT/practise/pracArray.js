@@ -1,131 +1,103 @@
 //reverse array
+
 let arr=[1,2,3,4];
 let start=0;
-let end= arr.length-1;
+let end=arr.length-1;
 while(start<end){
     let temp=arr[start];
-    arr[start]= arr[end];
-    arr[end]=temp;
-    start++;
-    end--;
-
+    arr[start]=arr[end];
+    arr[end]=temp
+    start++
+    end--
 }
-console.log("reverse Array",arr);
-
-
-
+console.log(arr)
 
 
 //using reverse method
+arr=[2,3,5,4]
+console.log(arr.reverse())
 
-arr=[1,2,3,4,5]
-let reverseArray= arr.reverse();
-console.log("reverse Array",reverseArray);
 
 //find maximum
-arr=[99,60,85,19,61];
-let max=arr[0];
-for(let i=0;i<arr.length;i++){
+arr=[73,85,74,74,94]
+let max=arr[0]
+for(let i=0; i<=arr.length;i++){
     if(arr[i]>max){
-        max=arr[i];
+        max=arr[i]
     }
-
 }
-console.log("maximum",max);
+console.log(max)
 
 
 //find minimum
-arr=[78,34,54,23,12,67,89,90];
-let min= arr[0];
-for(let i=0;i<arr.length;i++){
+let min=arr[0];
+for(let i=0;i<=arr.length;i++){
     if(arr[i]<min){
         min=arr[i]
     }
 }
-console.log("minimum",min);
+console.log(min)
+
 
 //find second largest 
-
-arr=[12,24,36,48,60,72];
-let first= -Infinity;
-let second= -Infinity;
+let first=-Infinity;
+let second=-Infinity
 for(let num of arr){
     if(num>first){
         second=first;
         first=num;
-    }else if (second>num && num!== first){
-        second=num;
+    }else if(num>second && num!==first){
+        second=num
     }
 }
-console.log("second Largest",second)
-
-
-
-
-
+console.log(second)
 
 //remove duplicate
-
-arr=[1,1,12,2,2,3,3,4,4];
 let result=[];
-for(let i =0;i<arr.length;i++){
+for(let i=0;i<arr.length;i++){
     if(!result.includes(arr[i])){
-        result.push(arr[i]);
-       
+        result.push(arr[i])
     }
-
 }
 console.log(result)
 
 
 
 
+
+
 // using another method
-arr=[1,1,12,2,12,31,31]
-let removeDuplicate= [...new Set(arr)]
-console.log(removeDuplicate)
+arr=[1,1,2,2,3,3]
+console.log([...new Set(arr)])
+
 
 
 // count frequency 
-arr=[1,1,1,2,2,3,4];
-let freq={};
-let count =0;
+arr=[10,12,13,14,15,16,17,18,19]
+let freq={}
 for(let num of arr){
-    freq[num]=(freq[num]|| 0)+1;
-    count++;
+    freq[num]=(freq[num]||0)+1
+}
+console.log(freq)
+// count words
+let str="hello hello world"
+let words=str.split(" ");
+freq={}
+for(let word of words){
+    freq[word]=(freq[word]||0)+1
 
 }
-console.log(freq);
-console.log(count);
-
-// count words
- let str="hello hello word";
- freq={}
- count =0;
-
- let newStr= str.split(" ");
- for(let word of newStr){
-    freq[word]=(freq[word]||0)+1;
-    count++;
-
- }
- console.log("count words",freq);
- console.log(count)
+console.log(freq)
 
  // count the characters
- str="vaishnavi"
- let strChr=str.split("");
+ str="hello"
+ let word=str.split('');
  freq={}
- count =0;
- for(let char of strChr){
-    freq[char]=(freq[char]||0)+1;
-    count++
-
+ for(let char of word){
+    freq[char]=(freq[char]||0)+1
  }
- console.log("count the char",freq)
- console.log(count)
-
-
+ console.log(freq)
+ 
 
 
 

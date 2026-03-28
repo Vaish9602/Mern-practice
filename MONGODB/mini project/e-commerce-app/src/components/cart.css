@@ -1,0 +1,27 @@
+.cart {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  .heading {
+    padding: 0;
+  }
+  .cart-item {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 7px 1px lightslategray;
+    .item-title {
+      color: #646cff;
+    }
+    .item-details {
+      .item-group {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+    }
+  }
+}

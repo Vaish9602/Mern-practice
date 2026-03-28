@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getDB } from "./db.mjs";
-import { ObjectId } from "mongodb";
+import { ObjectId } from "../intro/node_modules/mongodb/mongodb";
 const studentsRouter = Router();
 function getCollection() {
     return getDB().collection("students");
@@ -13,22 +13,64 @@ function getCollection() {
 // $in = "in array"
 // $nin = "not in array"
 // $regex = "regular expression"
-function groupByCourse(){
-    const collection=getCollection();
-    return collection.aggregate({
-        $group:{
-            _id:"$course",
-            totalStudent:{$sum:1}
-        }, 
 
-     
-    })
+// select * from students group by course having count(*) > 1 and age > 20;
+function simpleAggregation() {
+    const collection = getCollection();
+    return collection.aggregate([
+        {
+            $group: {
+                _id: "$course",
+                totalStudents: { $sum: 1 },
+            },
+        },
+        {
+            $match: {
+                totalStudents: { $gt: 1 },
+            }
+        }
+    ]).toArray();
 }
 
-function sortByMarks(ascending=true){
-    const collection=getCollection();
-    return collection.find({}).sort({marks:ascending?1:-1}).toArray();
+function groupByCourse() {
+    const collection = getCollection();
+    return collection.aggregate([
+        {
+            $sort: { "course": 1, "marks": -1 }
+        },
+        {
+            $group: {
+                _id: "$course",
+                totalStudents: { $sum: 1 },
+                topScorer: { $first: "$name" },
+                topScore: { $first: "$marks" },
+            },
+        }, {
+            $set: {
+                course: "$_id",
+                topPerformer: {
+                    name: "$topScorer",
+                    marks: "$topScore"
+                }
+            },
+        }, {
+            $unset: ["_id", "topScorer", "topScore"]
+        }
+    ]).toArray();
 }
+
+function sortByMarks(ascending = true) {
+    const collection = getCollection();
+    // 1 indicates ascending order, 
+    // -1 indicates descending order
+    return collection.find({}).sort({ marks: ascending ? 1 : -1 }).toArray();
+}
+
+function getTopScorer() {
+    const collection = getCollection();
+    return collection.find({}).sort({ marks: -1 }).limit(1).toArray();
+}
+
 function filterByAge() {
     const collection = getCollection();
     return collection.find({ age: { $gt: 20, $lt: 25 } }).toArray();
@@ -46,10 +88,15 @@ function filterByName() {
 }
 studentsRouter.get("/", async (req, res) => {
     const collection = getCollection();
-    // const students = await collection.find({}).toArray();
+    const students = await collection.find({}).toArray();
     // const students = await filterByAge();
     // const students = await filterByName();
-    const students = await findHighScorers();
+    // const students = await findHighScorers();
+    // const students = await sortByMarks();
+    // const students = await sortByMarks(false);
+    // const students = await getTopScorer();
+    // const students = await groupByCourse();
+    // const students = await simpleAggregation();
 
     res.json(students);
 });
@@ -66,6 +113,14 @@ studentsRouter.delete("/:id", async (req, res) => {
     const { id } = req.params;
     const collection = getCollection();
     const result = await collection.deleteOne({ _id: new ObjectId(id) });
+    res.json(result);
+});
+// update student set marks = 99, name = "juhi" where id = id
+studentsRouter.patch("/:id", async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+    const collection = getCollection();
+    const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updates });
     res.json(result);
 });
 
